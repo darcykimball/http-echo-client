@@ -7,7 +7,7 @@ import Network.HTTP.Types.Status
 import Options.Applicative
 
 
-import qualified Data.ByteString.Char8 as LB
+import qualified Data.ByteString.Lazy.Char8 as C
 
 
 import Shout
@@ -22,8 +22,10 @@ main = do
   -- Send something
   manager <- newManager defaultManagerSettings
 
+  proclamation <- C.pack <$> randomShout
+
   req <- shoutRequest
-           ("http://" <> host <> ":" <> show port) "Here's some sample text"
+           ("http://" <> host <> ":" <> show port) proclamation
 
   resp <- httpLbs req manager
   putStrLn $ "The status code was: " ++ (show $ statusCode $ responseStatus resp)
